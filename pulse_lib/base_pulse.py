@@ -155,9 +155,13 @@ class pulselib:
         seq_obj = sequencer(self.uploader, self.voltage_limits_correction)
         seq_obj.add_sequence(seq)
         seq_obj.metadata = {}
+        IQ_dict = {}
         for (i,pc) in enumerate(seq):
             md = pc.get_metadata()
             seq_obj.metadata[('pc%i'%i)] = md
+        for IQ in self.IQ_channels:
+            IQ_dict[IQ.virtual_channel_map[0].channel_name] = IQ.LO
+        seq_obj.metadata['LOs'] = IQ_dict
         return seq_obj
 
     def release_awg_memory(self, wait_idle=True):
